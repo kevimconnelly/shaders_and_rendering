@@ -5,7 +5,15 @@ using static UnityEngine.Mathf;
 public static class FunctionLibrary {
     public delegate float Function(float x, float t);
 
-    public static Function GetFunction(int index)
+    public enum FunctionName { Wave, MultiWave, Ripple }
+
+    static Function[] functions = { Wave, MultiWave, Ripple };
+
+    public static Function GetFunction(FunctionName name)
+    {
+        return functions[(int)name];
+    }
+    /*
     {
         if (index == 0)
         {
@@ -20,6 +28,7 @@ public static class FunctionLibrary {
             return Ripple;
         }
     }
+    */
 
     public static float Wave(float x, float t) {
         return Mathf.Sin(Mathf.PI * (x + t));
