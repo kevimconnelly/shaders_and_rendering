@@ -51,9 +51,10 @@ public class Graph : MonoBehaviour
             {
                 x = 0;
                 z += 1;
-                v = (z + 0.5f) * step - 1f;
+                //v = (z + 0.5f) * step - 1f;
             }
             float u = (x + 0.5f) * step - 1f;
+            //float v = (z + 0.5f) * step - 1f;
             //float v = (z + 0.5f) * step - 1f;
             points[i].localPosition = f(u, v, time);
             /*
