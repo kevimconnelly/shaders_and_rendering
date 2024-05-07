@@ -5,9 +5,9 @@ using static UnityEngine.Mathf;
 public static class FunctionLibrary {
     public delegate Vector3 Function(float u, float v, float t);
 
-    public enum FunctionName { Wave, MultiWave, Ripple };
+    public enum FunctionName { Wave, MultiWave, Ripple, Sphere };
 
-    static Function[] functions = { Wave, MultiWave, Ripple };
+    static Function[] functions = { Wave, MultiWave, Ripple, Sphere };
 
     public static Function GetFunction(FunctionName name)
     {
@@ -42,6 +42,15 @@ public static class FunctionLibrary {
         p.y = Sin(PI * (4f * d - t));
         p.y /= 1f + 10f * d;
         p.z = v;
+        return p;
+    }
+
+    public static Vector3 Sphere(float u, float v, float t)
+    {
+        Vector3 p;
+        p.x = 0f;
+        p.y = 0f;
+        p.z = 0f;
         return p;
     }
 }
