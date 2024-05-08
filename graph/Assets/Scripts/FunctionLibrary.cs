@@ -2,10 +2,12 @@ using UnityEngine;
 
 using static UnityEngine.Mathf;
 
-public static class FunctionLibrary {
+public static class FunctionLibrary
+{
+
     public delegate Vector3 Function(float u, float v, float t);
 
-    public enum FunctionName { Wave, MultiWave, Ripple, Sphere, Torus };
+    public enum FunctionName { Wave, MultiWave, Ripple, Sphere, Torus }
 
     static Function[] functions = { Wave, MultiWave, Ripple, Sphere, Torus };
 
@@ -25,14 +27,8 @@ public static class FunctionLibrary {
         return choice == name ? 0 : choice;
     }
 
-    public static Vector3 Morph(
-        float u, float v, float t, Function from, Function to, float progress
-    )
+    public static Vector3 Wave(float u, float v, float t)
     {
-        return Vector3.LerpUnclamped(from(u, v, t), to(u, v, t), SmoothStep(0f, 1f, progress));
-    }
-
-    public static Vector3 Wave(float u, float v, float t) {
         Vector3 p;
         p.x = u;
         p.y = Sin(PI * (u + v + t));
@@ -69,7 +65,7 @@ public static class FunctionLibrary {
         float s = r * Cos(0.5f * PI * v);
         Vector3 p;
         p.x = s * Sin(PI * u);
-        p.y = r * Sin(PI * 0.5f * v);
+        p.y = r * Sin(0.5f * PI * v);
         p.z = s * Cos(PI * u);
         return p;
     }
@@ -84,5 +80,14 @@ public static class FunctionLibrary {
         p.y = r2 * Sin(PI * v);
         p.z = s * Cos(PI * u);
         return p;
+    }
+
+    public static Vector3 Morph(
+        float u, float v, float t, Function from, Function to, float progress
+    )
+    {
+        return Vector3.LerpUnclamped(
+            from(u, v, t), to(u, v, t), SmoothStep(0f, 1f, progress)
+        );
     }
 }

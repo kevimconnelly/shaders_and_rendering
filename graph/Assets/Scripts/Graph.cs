@@ -32,9 +32,9 @@ public class Graph : MonoBehaviour
     {
         float step = 2f / resolution;
         var scale = Vector3.one * step;
-
         points = new Transform[resolution * resolution];
-        for (int i = 0; i < points.Length; i++) {
+        for (int i = 0; i < points.Length; i++)
+        {
             Transform point = points[i] = Instantiate(pointPrefab);
             point.localScale = scale;
             point.SetParent(transform, false);
@@ -44,7 +44,14 @@ public class Graph : MonoBehaviour
     void Update()
     {
         duration += Time.deltaTime;
-        if (transitioning) { }
+        if (transitioning)
+        {
+            if (duration >= transitionDuration)
+            {
+                duration -= transitionDuration;
+                transitioning = false;
+            }
+        }
         else if (duration >= functionDuration)
         {
             duration -= functionDuration;
@@ -55,11 +62,7 @@ public class Graph : MonoBehaviour
 
         if (transitioning)
         {
-            if (duration >= transitionDuration)
-            {
-                duration -= transitionDuration;
-                transitioning = false;
-            }
+            UpdateFunctionTransition();
         }
         else
         {
@@ -77,7 +80,6 @@ public class Graph : MonoBehaviour
     void UpdateFunction()
     {
         FunctionLibrary.Function f = FunctionLibrary.GetFunction(function);
-
         float time = Time.time;
         float step = 2f / resolution;
         float v = 0.5f * step - 1f;
