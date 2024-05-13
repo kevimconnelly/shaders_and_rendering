@@ -10,6 +10,7 @@ public class Fractal : MonoBehaviour
     }
 
     FractalPart[][] parts;
+    Matrix4x4[][] matrices;
 
     [SerializeField]
     Mesh mesh;
@@ -39,12 +40,15 @@ public class Fractal : MonoBehaviour
     void Awake()
     {
         parts = new FractalPart[depth][];
+        matrices = new Matrix4x4[depth][];
         for (int i = 0, length = 1; i < parts.Length; i++, length *= 5)
         {
             parts[i] = new FractalPart[length];
+            matrices[i] = new Matrix4x4[length];
         }
 
         parts[0][0] = CreatePart(0);
+        
         for (int li = 1; li < parts.Length; li++)
         {
             FractalPart[] levelParts = parts[li];
@@ -53,6 +57,7 @@ public class Fractal : MonoBehaviour
                 {
                     levelParts[fpi + ci] = CreatePart(ci);
                 }
+            
         }
     }
 
@@ -64,6 +69,9 @@ public class Fractal : MonoBehaviour
         rootPart.rotation *= deltaRotation;
         rootPart.worldRotation = rootPart.rotation;
         parts[0][0] = rootPart;
+        matrices[0][0] = Matrix4x4.TRS(
+            rootPart.worldPosition, rootPart.worldRotation, Vector3.one
+        );
 
         float scale = 1f;
         for (int li = 1; li < parts.Length; li++)
@@ -71,6 +79,7 @@ public class Fractal : MonoBehaviour
             scale *= 0.5f;
             FractalPart[] parentParts = parts[li - 1];
             FractalPart[] levelParts = parts[li];
+            Matrix4x4[] levelMatrices = matrices[li];
             for (int fpi = 0; fpi < levelParts.Length; fpi++)
             {
                 //Transform parentTransform = parentParts[fpi / 5].transform;
@@ -82,6 +91,9 @@ public class Fractal : MonoBehaviour
                     parent.worldPosition +
                     parent.worldRotation * (1.5f * scale * part.direction);
                 levelParts[fpi] = part;
+                levelMatrices[fpi] = Matrix4x4.TRS(
+                    part.worldPosition, part.worldRotation, scale * Vector3.one
+                );
             }
         }
     }
