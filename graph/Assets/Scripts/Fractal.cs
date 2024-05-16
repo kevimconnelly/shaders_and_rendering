@@ -46,7 +46,9 @@ public class Fractal : MonoBehaviour {
 		public float spinAngle;
 	}
 
-	static readonly int matricesId = Shader.PropertyToID("_Matrices");
+	static readonly int 
+		baseColorId = Shader.PropertyToID("_BaseColor"),
+		matricesId = Shader.PropertyToID("_Matrices");
 
 	static float3[] directions = {
 		up(), right(), left(), forward(), back()
@@ -153,7 +155,10 @@ public class Fractal : MonoBehaviour {
 		for (int i = 0; i < matricesBuffers.Length; i++) {
 			ComputeBuffer buffer = matricesBuffers[i];
 			buffer.SetData(matrices[i]);
-			propertyBlock.SetBuffer(matricesId, buffer);
+            propertyBlock.SetColor(
+                baseColorId, Color.white * (i / (matricesBuffers.Length - 1f))
+            );
+            propertyBlock.SetBuffer(matricesId, buffer);
 			Graphics.DrawMeshInstancedProcedural(
 				mesh, 0, material, bounds, buffer.count, propertyBlock
 			);
