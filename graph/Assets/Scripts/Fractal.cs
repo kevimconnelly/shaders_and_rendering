@@ -65,11 +65,11 @@ public class Fractal : MonoBehaviour {
 
 	static MaterialPropertyBlock propertyBlock;
 
-	[SerializeField, Range(2, 8)]
+	[SerializeField, Range(3, 8)]
 	int depth = 4;
 
 	[SerializeField]
-	Mesh mesh;
+	Mesh mesh, leafMesh;
 
 	[SerializeField]
 	Material material;
@@ -171,23 +171,26 @@ public class Fractal : MonoBehaviour {
 			ComputeBuffer buffer = matricesBuffers[i];
 			buffer.SetData(matrices[i]);
             Color colorA, colorB;
+            Mesh instanceMesh;
             if (i == leafIndex)
             {
                 colorA = leafColorA;
                 colorB = leafColorB;
+                instanceMesh = leafMesh;
             }
             else
             {
                 float gradientInterpolator = i / (matricesBuffers.Length - 2f);
                 colorA = gradientA.Evaluate(gradientInterpolator);
                 colorB = gradientB.Evaluate(gradientInterpolator);
+				instanceMesh = mesh;
             }
             propertyBlock.SetColor(colorAId, colorA);
             propertyBlock.SetColor(colorBId, colorB);
             propertyBlock.SetBuffer(matricesId, buffer);
             propertyBlock.SetVector(sequenceNumbersId, sequenceNumbers[i]);
             Graphics.DrawMeshInstancedProcedural(
-				mesh, 0, material, bounds, buffer.count, propertyBlock
+				instanceMesh, 0, material, bounds, buffer.count, propertyBlock
 			);
 		}
 	}
