@@ -94,7 +94,10 @@ public class Fractal : MonoBehaviour {
     Color leafColorA, leafColorB;
 
     [SerializeField, Range(0f, 90f)]
-    float spinVelocityA = 20f, spinVelocityB = 25f;
+    float spinSpeedA = 20f, spinSpeedB = 25f;
+
+    [SerializeField, Range(0f, 1f)]
+    float reverseSpinChance = 0.25f;
 
     [SerializeField, Range(0f, 90f)]
     float maxSagAngleA = 15f, maxSagAngleB = 25f;
@@ -155,7 +158,7 @@ public class Fractal : MonoBehaviour {
 	FractalPart CreatePart (int childIndex) => new FractalPart {
         maxSagAngle = radians(Random.Range(maxSagAngleA, maxSagAngleB)),
         rotation = rotations[childIndex],
-        spinVelocity = radians(Random.Range(spinVelocityA, spinVelocityB))
+        spinVelocity = (Random.value < reverseSpinChance ? -1f : 1f) * radians(Random.Range(spinSpeedA, spinSpeedB))
     };
 
 	void Update () {
